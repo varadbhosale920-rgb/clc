@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Royal Biryani - Online Food Ordering</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+html{scroll-behavior:smooth}
+body{background:#fffaf5;color:#222}
+nav{background:#17100c;color:#fff;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 7%;position:sticky;top:0;z-index:1000}
+.logo{font-size:25px;font-weight:bold;color:#ffb300}.logo span{color:#fff}
+nav ul{display:flex;gap:30px;list-style:none}nav a{color:#fff;text-decoration:none}nav a:hover{color:#ffb300}
+.cart-button{background:#ff9800;color:#fff;border:0;padding:10px 17px;border-radius:25px;cursor:pointer;font-weight:bold}
+.hero{min-height:500px;display:flex;align-items:center;padding:60px 7%;background:linear-gradient(#0009,#0009),url("https://images.unsplash.com/photo-1563379091339-03246963d96c?auto=format&fit=crop&w=1600&q=80") center/cover}
+.hero-content{max-width:650px;color:#fff}.hero h1{font-size:55px;margin-bottom:15px}.hero h1 span{color:#ffb300}
+.hero p{font-size:19px;line-height:1.6;margin-bottom:25px;color:#eee}.hero-btn{background:#ff9800;color:#fff;border:0;padding:14px 28px;border-radius:6px;font-size:16px;cursor:pointer;font-weight:bold}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:35px 7%;background:#fff}.feature{text-align:center;padding:20px}.feature-icon{font-size:35px;margin-bottom:10px}.feature h3{margin-bottom:7px}.feature p{color:#777;font-size:14px}
+.menu-section{padding:60px 7%}.section-title{text-align:center;margin-bottom:35px}.section-title h2{font-size:35px;margin-bottom:10px}.section-title p{color:#777}
+.categories{display:flex;justify-content:center;gap:12px;margin-bottom:35px;flex-wrap:wrap}.category-btn{padding:10px 20px;border:1px solid #ff9800;background:#fff;color:#d97900;border-radius:25px;cursor:pointer;font-weight:bold}.category-btn.active,.category-btn:hover{background:#ff9800;color:#fff}
+.food-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px}.food-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 5px 20px #00000014;transition:.3s}.food-card:hover{transform:translateY(-6px);box-shadow:0 10px 30px #00000026}.food-card img{width:100%;height:220px;object-fit:cover}
+.food-info{padding:20px}.food-info h3{font-size:21px;margin-bottom:8px}.food-info p{color:#777;line-height:1.5;font-size:14px;min-height:42px}.food-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:18px}.food-price{color:#d97706;font-size:21px;font-weight:bold}.add-btn{background:#17100c;color:#fff;border:0;padding:10px 16px;border-radius:6px;cursor:pointer}.add-btn:hover{background:#ff9800}
+.about{background:#17100c;color:#fff;padding:60px 7%;text-align:center}.about h2{font-size:34px;margin-bottom:15px;color:#ffb300}.about p{max-width:750px;margin:auto;line-height:1.8;color:#ddd}
+footer{background:#0c0806;color:#fff;text-align:center;padding:25px}footer p{margin:5px;color:#ccc}
+.cart-overlay,.checkout-modal{display:none;position:fixed;inset:0;background:#000000b3;z-index:2000}.cart-sidebar{position:absolute;right:0;top:0;height:100%;width:420px;max-width:100%;background:#fff;padding:25px;overflow-y:auto}
+.cart-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;padding-bottom:15px;margin-bottom:20px}.close-cart,.close-checkout{font-size:30px;cursor:pointer;color:#777}
+.cart-item{display:flex;gap:12px;padding:15px 0;border-bottom:1px solid #eee}.cart-item img{width:75px;height:65px;object-fit:cover;border-radius:7px}.cart-item-info{flex:1}.cart-item-info h4{margin-bottom:5px}.cart-item-price{color:#d97706;font-weight:bold}
+.quantity{display:flex;align-items:center;gap:8px;margin-top:8px}.quantity button{width:25px;height:25px;border:0;background:#17100c;color:#fff;border-radius:4px;cursor:pointer}.quantity span{font-weight:bold}.remove-btn{color:red;background:none;border:0;cursor:pointer;font-size:12px;margin-top:5px}
+.cart-summary{margin-top:25px;background:#fff8ed;padding:18px;border-radius:8px}.summary-row{display:flex;justify-content:space-between;margin:10px 0}.grand-total{font-size:22px;font-weight:bold;color:#d97706;border-top:1px solid #ddd;padding-top:12px}.checkout-btn,.place-order{width:100%;margin-top:15px;padding:14px;background:#ff9800;color:#fff;border:0;border-radius:7px;cursor:pointer;font-size:16px;font-weight:bold}.empty-cart{text-align:center;color:#777;padding:50px 0}
+.checkout-modal{z-index:3000;justify-content:center;align-items:center;padding:20px}.checkout-box{background:#fff;width:100%;max-width:550px;max-height:90vh;overflow-y:auto;border-radius:12px;padding:30px;position:relative}.close-checkout{position:absolute;right:20px;top:15px}.checkout-box h2{margin-bottom:25px}
+.form-group{margin-bottom:15px}.form-group label{display:block;font-weight:bold;margin-bottom:7px}.form-group input,.form-group textarea,.form-group select{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px}.form-group textarea{height:80px;resize:none}
+.success{display:none;text-align:center;padding:30px}.success-icon{font-size:65px;margin-bottom:15px}.success h2{color:#16a34a;margin-bottom:12px}.success p{line-height:1.7;color:#555}.done-btn{margin-top:20px;padding:12px 30px;background:#17100c;color:#fff;border:0;border-radius:6px;cursor:pointer}
+@media(max-width:900px){.food-grid{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:43px}}
+@media(max-width:600px){nav ul{display:none}.hero{min-height:430px}.hero h1{font-size:35px}.features,.food-grid{grid-template-columns:1fr}.menu-section{padding:45px 5%}.cart-sidebar{width:100%}}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="logo">🍗 Royal<span>Biryani</span></div>
+<ul>
+<li><a href="#home">Home</a></li><li><a href="#menu">Menu</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li>
+</ul>
+<button class="cart-button" onclick="openCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
+</nav>
+
+<section class="hero" id="home">
+<div class="hero-content">
+<h1>Taste The <span>Royal Biryani</span></h1>
+<p>Delicious Dum Biryani, juicy Chicken Kababs and authentic Indian flavors delivered hot and fresh to your doorstep.</p>
+<button class="hero-btn" onclick="document.getElementById('menu').scrollIntoView()">Order Now 🍽️</button>
+</div>
+</section>
+
+<section class="features">
+<div class="feature"><div class="feature-icon">🔥</div><h3>Fresh & Hot</h3><p>Prepared fresh and delivered hot.</p></div>
+<div class="feature"><div class="feature-icon">🚴</div><h3>Fast Delivery</h3><p>Quick and reliable food delivery.</p></div>
+<div class="feature"><div class="feature-icon">⭐</div><h3>Best Quality</h3><p>Premium ingredients and authentic taste.</p></div>
+</section>
+
+<section class="menu-section" id="menu">
+<div class="section-title"><h2>Our Menu</h2><p>Choose your favorite food and order now</p></div>
+<div class="categories">
+<button class="category-btn active" onclick="filterFood('all',this)">All</button>
+<button class="category-btn" onclick="filterFood('biryani',this)">🍚 Biryani</button>
+<button class="category-btn" onclick="filterFood('kabab',this)">🍗 Chicken Kabab</button>
+<button class="category-btn" onclick="filterFood('starter',this)">🌶️ Starters</button>
+<button class="category-btn" onclick="filterFood('drink',this)">🥤 Drinks</button>
+</div>
+
+<div class="food-grid">
+<div class="food-card" data-category="biryani">
+<img src="https://images.unsplash.com/photo-1563379091339-03246963d96c?auto=format&fit=crop&w=800&q=80">
+<div class="food-info"><h3>Chicken Dum Biryani</h3><p>Aromatic basmati rice cooked with tender chicken and special spices.</p><div class="food-bottom"><span class="food-price">₹220</span><button class="add-btn" onclick="addToCart('Chicken Dum Biryani',220,this.previousElementSibling)">Add +</button></div></div>
+</div>
+
+<div class="food-card" data-category="biryani">
+<img src="https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=800&q=80">
+<div class="food-info"><h3>Mutton Biryani</h3><p>Slow-cooked mutton with fragrant basmati rice and rich spices.</p><div class="food-bottom"><span class="food-price">₹320</span><button class="add-btn" onclick="addToCart('Mutton Biryani',320,this.previousElementSibling)">Add +</button></div></div>
+</div>
+
+<div class="food-card" data-category="kabab">
+<img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=800&q=80">
+<div class="food-info"><h3>Chicken Tikka</h3><p>Juicy chicken pieces marinated with aromatic Indian spices.</p><div class="food-bottom"><span class="food-price">₹240</span><button class="add-btn" onclick="addToCart('Chicken Tikka',240,this.previousElementSibling)">Add +</button></div></div>
+</div>
+
+<div class="food-card" data-category="kabab">
+<img src="https://images.unsplash.com/photo-1628294895950-9805252327bc?auto=format&fit=crop&w=800&q=80">
+<div class="food-info"><h3>Chicken Seekh Kabab</h3><p>Spicy minced chicken grilled perfectly over charcoal.</p><div class="food-bottom"><span class="food-price">₹260</span><button class="add-btn" onclick="addToCart('Chicken Seekh Kabab',260,this.previousElementSibling)">Add +</button></div></div>
+</div>
+
+<div class="food-card" data-category="starter">
+<img src="https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=800&q=80">
+<div class="food-info"><h3>Chicken Wings</h3><p>Crispy and spicy chicken wings served with special sauce.</p><div class="food-bottom"><span class="food-price">₹190</span><button class="add-btn" onclick="addToCart('Chicken Wings',190,this.previousElementSibling)">Add +</button></div></div>
+</div>
+
+<div class="food-card" data-category="starter">
+<img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80">
+<div class="food-info"><h3>Chicken 65</h3><p>Crispy fried chicken tossed with spicy South Indian flavors.</p><div class="food-bottom"><span class="food-price">₹210</span><button class="add-btn" onclick="addToCart('Chicken 65',210,this.previousElementSibling)">Add +</button></div></div>
+</div>
+
+<div class="food-card" data-category="drink">
+<img src="https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=800&q=80">
+<div class="food-info"><h3>Cold Drink</h3><p>Chilled refreshing soft drink to enjoy with your meal.</p><div class="food-bottom"><span class="food-price">₹50</span><button class="add-btn" onclick="addToCart('Cold Drink',50,this.previousElementSibling)">Add +</button></div></div>
+</div>
+
+<div class="food-card" data-category="drink">
+<img src="https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=800&q=80">
+<div class="food-info"><h3>Sweet Lassi</h3><p>Thick creamy chilled lassi with a refreshing sweet taste.</p><div class="food-bottom"><span class="food-price">₹80</span><button class="add-btn" onclick="addToCart('Sweet Lassi',80,this.previousElementSibling)">Add +</button></div></div>
+</div>
+</div>
+</section>
+
+<section class="about" id="about">
+<h2>About Royal Biryani</h2>
+<p>Royal Biryani brings you authentic Indian flavors prepared with premium ingredients and traditional cooking techniques. From aromatic Chicken Dum Biryani to juicy Chicken Kababs, every dish is prepared fresh and packed with love.</p>
+</section>
+
+<footer id="contact">
+<p>🍗 Royal Biryani</p>
+<p>📞 +91 98765 43210 &nbsp; | &nbsp; 📧 order@royalbiryani.com</p>
+<p>© 2026 Royal Biryani. All Rights Reserved.</p>
+</footer>
+
+<div class="cart-overlay" id="cartOverlay">
+<div class="cart-sidebar">
+<div class="cart-header"><h2>🛒 Your Cart</h2><span class="close-cart" onclick="closeCart()">×</span></div>
+<div id="cartItems"></div>
+<div class="cart-summary">
+<div class="summary-row"><span>Subtotal</span><strong id="subtotal">₹0</strong></div>
+<div class="summary-row"><span>Delivery Fee</span><strong id="deliveryFee">₹0</strong></div>
+<div class="summary-row grand-total"><span>Total</span><span id="grandTotal">₹0</span></div>
+<button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout</button>
+</div>
+</div>
+</div>
+
+<div class="checkout-modal" id="checkoutModal">
+<div class="checkout-box">
+<span class="close-checkout" onclick="closeCheckout()">×</span>
+
+<div id="checkoutForm">
+<h2>🍽️ Complete Your Order</h2>
+<div class="form-group"><label>Full Name</label><input type="text" id="customerName" placeholder="Enter your full name"></div>
+<div class="form-group"><label>Mobile Number</label><input type="tel" id="customerPhone" placeholder="Enter 10 digit mobile number"></div>
+<div class="form-group"><label>Delivery Address</label><textarea id="customerAddress" placeholder="Enter complete delivery address"></textarea></div>
+<div class="form-group"><label>Payment Method</label><select id="paymentMethod"><option>Cash on Delivery</option><option>UPI</option><option>Credit / Debit Card</option></select></div>
+<div class="cart-summary">
+<div class="summary-row"><span>Total Items</span><strong id="checkoutItems">0</strong></div>
+<div class="summary-row grand-total"><span>Payable Amount</span><span id="checkoutTotal">₹0</span></div>
+</div>
+<button class="place-order" onclick="placeOrder()">🛍️ Place Order</button>
+</div>
+
+<div class="success" id="success">
+<div class="success-icon">✅</div>
+<h2>Order Confirmed!</h2>
+<p id="successText"></p>
+<button class="done-btn" onclick="finishOrder()">Done</button>
+</div>
+</div>
+</div>
+
+<script>
+let cart=[];
+
+function addToCart(name,price,button){
+    const image=button.closest(".food-card").querySelector("img").src;
+    const item=cart.find(x=>x.name===name);
+    if(item)item.quantity++;
+    else cart.push({name,price,image,quantity:1});
+    updateCart();
+    alert(name+" added to cart!");
+}
+
+function updateCart(){
+    const container=document.getElementById("cartItems");
+    let count=0,subtotal=0;
+    cart.forEach(i=>{count+=i.quantity;subtotal+=i.price*i.quantity});
+    document.getElementById("cartCount").textContent=count;
+
+    if(!cart.length){
+        container.innerHTML='<div class="empty-cart"><h3>🛒 Your cart is empty</h3><p>Add some delicious food!</p></div>';
+    }else{
+        container.innerHTML="";
+        cart.forEach((item,index)=>{
+            container.innerHTML+=`
+            <div class="cart-item">
+                <img src="${item.image}">
+                <div class="cart-item-info">
+                    <h4>${item.name}</h4>
+                    <div class="cart-item-price">₹${(item.price*item.quantity).toLocaleString("en-IN")}</div>
+                    <div class="quantity">
+                        <button onclick="changeQuantity(${index},-1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button onclick="changeQuantity(${index},1)">+</button>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+                </div>
+            </div>`;
+        });
+    }
+
+    const delivery=subtotal?subtotal>=500?0:40:0;
+    const total=subtotal+delivery;
+    document.getElementById("subtotal").textContent="₹"+subtotal.toLocaleString("en-IN");
+    document.getElementById("deliveryFee").textContent=subtotal?(delivery?"₹40":"FREE"):"₹0";
+    document.getElementById("grandTotal").textContent="₹"+total.toLocaleString("en-IN");
+}
+
+function changeQuantity(index,change){
+    cart[index].quantity+=change;
+    if(cart[index].quantity<=0)cart.splice(index,1);
+    updateCart();
+}
+
+function removeItem(index){cart.splice(index,1);updateCart()}
+function openCart(){document.getElementById("cartOverlay").style.display="block"}
+function closeCart(){document.getElementById("cartOverlay").style.display="none"}
+
+function filterFood(category,button){
+    document.querySelectorAll(".category-btn").forEach(b=>b.classList.remove("active"));
+    button.classList.add("active");
+    document.querySelectorAll(".food-card").forEach(card=>{
+        card.style.display=category==="all"||card.dataset.category===category?"block":"none";
+    });
+}
+
+function openCheckout(){
+    if(!cart.length){alert("Your cart is empty!");return}
+    closeCart();
+    let items=0,total=0;
+    cart.forEach(i=>{items+=i.quantity;total+=i.price*i.quantity});
+    total+=total>=500?0:40;
+    document.getElementById("checkoutItems").textContent=items;
+    document.getElementById("checkoutTotal").textContent="₹"+total.toLocaleString("en-IN");
+    document.getElementById("checkoutModal").style.display="flex";
+    document.getElementById("checkoutForm").style.display="block";
+    document.getElementById("success").style.display="none";
+}
+
+function closeCheckout(){document.getElementById("checkoutModal").style.display="none"}
+
+function placeOrder(){
+    const name=document.getElementById("customerName").value.trim();
+    const phone=document.getElementById("customerPhone").value.trim();
+    const address=document.getElementById("customerAddress").value.trim();
+    const payment=document.getElementById("paymentMethod").value;
+
+    if(!name||!phone||!address){alert("Please fill all required details.");return}
+    if(!/^[0-9]{10}$/.test(phone)){alert("Please enter a valid 10 digit mobile number.");return}
+
+    let subtotal=0,items=0;
+    cart.forEach(i=>{subtotal+=i.price*i.quantity;items+=i.quantity});
+    const total=subtotal+(subtotal>=500?0:40);
+    const orderId="RB"+Math.floor(100000+Math.random()*900000);
+
+    document.getElementById("checkoutForm").style.display="none";
+    document.getElementById("success").style.display="block";
+    document.getElementById("successText").innerHTML=
+    `Thank you <strong>${name}</strong>!<br><br>
+    Your order has been successfully placed.<br><br>
+    <strong>Order ID:</strong> ${orderId}<br>
+    <strong>Items:</strong> ${items}<br>
+    <strong>Total:</strong> ₹${total.toLocaleString("en-IN")}<br>
+    <strong>Payment:</strong> ${payment}<br><br>
+    🍗 Your delicious food will be prepared and delivered soon!`;
+}
+
+function finishOrder(){
+    cart=[];
+    updateCart();
+    closeCheckout();
+    document.getElementById("customerName").value="";
+    document.getElementById("customerPhone").value="";
+    document.getElementById("customerAddress").value="";
+}
+
+window.onclick=function(e){
+    if(e.target===document.getElementById("cartOverlay"))closeCart();
+    if(e.target===document.getElementById("checkoutModal"))closeCheckout();
+}
+
+updateCart();
+</script>
+</body>
+</html>
